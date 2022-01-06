@@ -1,0 +1,20 @@
+node {
+    def buildnum=BUILD_NUMBER
+    def mavenhome= tool name:maven
+    stages("git clone"){
+        git clone 'https://github.com/MithunTechnologiesDevOps/spring-boot-mongo-docker.git',brach:'master'
+    }
+    
+    stages("creating package"){
+        sh "mavenhome/bin/mvn clean package"
+    }
+    stages("build image"){
+        sh "docker build -t gangadharb/springbootapp:$(buildnum)"
+    }
+    stages("login authenticate"){
+        sh "docker login -u gangadharb -p badsha@1998"
+    }
+    stage("pushing image to registry"){
+        sh "docker push gangadharb:springbootapp:$(buildnum)"
+    }
+}
